@@ -1,13 +1,64 @@
 import React from "react";
-import { CssBaseline, ThemeProvider } from "@material-ui/core";
+import {
+  CssBaseline,
+  ThemeProvider,
+  Box,
+  Typography,
+  Grid,
+} from "@material-ui/core";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { AppHeader } from "./layout/AppHeader";
 import theme from "./layout/theme";
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    offset: theme.mixins.toolbar,
+    image: {
+      height: "50vh",
+      minHeight: "400px",
+      background: "url(https://source.unsplash.com/featured/?tech)",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+      filter: "drop-shadow(0 0 1rem)",
+      marginBottom: "4rem",
+    },
+    title: {
+      maxWidth: 1000,
+    },
+  })
+);
+
 function App() {
+  const classes = useStyles();
   return (
     <>
       <CssBaseline />
       <ThemeProvider theme={theme}>
-        <h1>Praca Magisterska </h1>
+        <AppHeader />
+        <div className={classes.offset} />
+        <Box component="div" m={5}>
+          <div className={classes.image} />
+          <Grid
+            container
+            direction="column"
+            justify="center"
+            alignItems="center"
+            spacing={3}
+          >
+            <Grid item xs>
+              <Typography
+                variant="h4"
+                component="h1"
+                align="center"
+                className={classes.title}
+              >
+                Dwuczynnikowe: biometryczne i behawioralne, uwierzytelnianie
+                klienta serwisu webowego poprzez weryfikację twarzy i jej mimiki
+                z wykorzystaniem sztucznych sieci neuronowych.
+              </Typography>
+            </Grid>
+          </Grid>
+        </Box>
       </ThemeProvider>
     </>
   );

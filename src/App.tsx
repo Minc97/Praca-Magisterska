@@ -1,11 +1,15 @@
 import React from "react";
+import { CssBaseline, ThemeProvider } from "@material-ui/core";
+import theme from "./layout/theme";
 
 function App() {
   return (
-    <div>
-      <h1>Praca Magisterska </h1>{" "}
-      <p>Początki są zawsze trudne... (albo i nie) </p>
-    </div>
+    <>
+      <CssBaseline />
+      <ThemeProvider theme={theme}>
+        <h1>Praca Magisterska </h1>
+      </ThemeProvider>
+    </>
   );
 }
 

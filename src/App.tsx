@@ -14,13 +14,16 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     offset: theme.mixins.toolbar,
     image: {
-      height: "50vh",
-      minHeight: "400px",
+      height: "500px",
+      width: "800px",
+      minHeight: "200px",
+      minWidth: "500px",
       background: "url(https://source.unsplash.com/featured/?tech)",
       backgroundPosition: "center",
       backgroundRepeat: "no-repeat",
+      backgroundSize: "cover",
       filter: "drop-shadow(0 0 1rem)",
-      marginBottom: "4rem",
+      borderRadius: "10px",
     },
     title: {
       maxWidth: 1000,
@@ -37,14 +40,16 @@ function App() {
         <AppHeader />
         <div className={classes.offset} />
         <Box component="div" m={5}>
-          <div className={classes.image} />
           <Grid
             container
             direction="column"
             justify="center"
             alignItems="center"
-            spacing={3}
+            spacing={6}
           >
+            <Grid item xs>
+              <div className={classes.image} />
+            </Grid>
             <Grid item xs>
               <Typography
                 variant="h4"

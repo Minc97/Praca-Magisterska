@@ -27,7 +27,9 @@ export const AppHeader = () => {
         <Typography variant="h6" className={classes.title}>
           Praca Magisterska
         </Typography>
-        <Button color="secondary">Rejestracja</Button>
+        <Button color="secondary" variant="contained">
+          Rejestracja
+        </Button>
         <Button color="inherit">Logowanie</Button>
       </Toolbar>
     </AppBar>

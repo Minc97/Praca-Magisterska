@@ -5,20 +5,14 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { AppHeader } from "./layout/AppHeader";
 import theme from "./layout/theme";
 import { MainPage } from "./components/MainPage";
+import { LoginPage } from "./components/LoginPage";
+import {RegistrationPage} from "./components/RegistrationPage";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     offset: theme.mixins.toolbar,
   })
 );
-
-function Login() {
-  return <h2>Login</h2>;
-}
-
-function Registration() {
-  return <h2>Registration</h2>;
-}
 
 function App() {
   const classes = useStyles();
@@ -31,10 +25,10 @@ function App() {
           <div className={classes.offset} />
           <Switch>
             <Route path="/login">
-              <Login />
+              <LoginPage />
             </Route>
             <Route path="/registration">
-              <Registration />
+              <RegistrationPage />
             </Route>
             <Route path="/">
               <MainPage />

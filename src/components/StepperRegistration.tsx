@@ -20,8 +20,12 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     instructions: {
       marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1),
+      marginBottom: theme.spacing(20),
     },
+    actionButtons: {
+      display: 'flex',
+      justifyContent: 'flex-end'
+    }
   })
 );
 
@@ -81,7 +85,7 @@ export const StepperRegistration = () => {
             <Typography className={classes.instructions}>
               {getStepContent(activeStep)}
             </Typography>
-            <div>
+            <div className={classes.actionButtons}>
               <Button
                 disabled={activeStep === 0}
                 onClick={handleBack}

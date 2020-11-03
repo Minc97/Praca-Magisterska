@@ -6,7 +6,7 @@ import { AppHeader } from "./layout/AppHeader";
 import theme from "./layout/theme";
 import { MainPage } from "./components/MainPage";
 import { LoginPage } from "./components/LoginPage";
-import {RegistrationPage} from "./components/RegistrationPage";
+import { RegistrationPage } from "./components/RegistrationPage";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

@@ -1,7 +1,7 @@
 import React from "react";
 import Particles from "react-particles-js";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import theme from "../layout/theme";
+import theme from "./theme";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

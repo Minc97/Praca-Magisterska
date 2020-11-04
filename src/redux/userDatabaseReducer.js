@@ -6,10 +6,9 @@ const initialState = {
   password: '',
   selectedMethod: '',
   faceModel: '',
-  authenticated: false,
 };
 
-export const userReducer = (state = initialState, action) => {
+export const userDatabaseReducer = (state = initialState, action) => {
   if (action.type === REGISTER_USER) {
     return [...state, action.payload];
   }

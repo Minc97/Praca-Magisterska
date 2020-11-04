@@ -1,31 +1,36 @@
-import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import React from "react";
+import { Link as RouterLink } from "react-router-dom";
+import { Button, Typography } from "@material-ui/core";
+import Avatar from "@material-ui/core/Avatar";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import TextField from "@material-ui/core/TextField";
+import Link from "@material-ui/core/Link";
+import Grid from "@material-ui/core/Grid";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import { makeStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(2),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: '100%',
+    width: "100%",
     marginTop: theme.spacing(3),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
   },
 }));
 
-export const SignUpFirstStep = () => {
+const SignUpFirstStep = () => {
   const classes = useStyles();
 
   return (
@@ -35,14 +40,16 @@ export const SignUpFirstStep = () => {
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
-        <form className={classes.form} noValidate>
+        <Typography component="h1" variant="h5">
+          Zarejestruj się
+        </Typography>
+        <form className={classes.form}>
           <Grid container spacing={2}>
             <Grid item sm={12}>
               <TextField
                 autoComplete="name"
                 name="Name"
                 variant="outlined"
-                required
                 fullWidth
                 id="Name"
                 label="Nazwa"
@@ -52,7 +59,6 @@ export const SignUpFirstStep = () => {
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
-                required
                 fullWidth
                 id="email"
                 label="Adres E-mail"
@@ -63,7 +69,6 @@ export const SignUpFirstStep = () => {
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
-                required
                 fullWidth
                 name="password"
                 label="Hasło"
@@ -73,9 +78,18 @@ export const SignUpFirstStep = () => {
               />
             </Grid>
           </Grid>
-          <Grid container justify="flex-end">
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            Zarejestruj
+          </Button>
+          <Grid container>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link component={RouterLink} to="/login" variant="body2">
                 Masz już konto? Zaloguj się
               </Link>
             </Grid>
@@ -84,4 +98,6 @@ export const SignUpFirstStep = () => {
       </div>
     </Container>
   );
-}
+};
+
+export default SignUpFirstStep;

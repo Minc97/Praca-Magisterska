@@ -1,11 +1,11 @@
 import React from "react";
 import { Container } from "@material-ui/core";
-import { StepperRegistration } from "./StepperRegistration";
+import SignUpFirstStep from "./SignUpFirstStep";
 
 export const RegistrationPage = () => {
   return (
     <Container maxWidth="lg">
-      <StepperRegistration />
+      <SignUpFirstStep />
     </Container>
   );
 };

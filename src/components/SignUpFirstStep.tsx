@@ -1,14 +1,16 @@
 import React from "react";
+import { Field, reduxForm, InjectedFormProps } from "redux-form";
 import { Link as RouterLink } from "react-router-dom";
 import { Button, Typography } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import RenderTextField from "./utils/RenderTextField";
+import MD5 from "./utils/md5";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -30,9 +32,31 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignUpFirstStep = () => {
-  const classes = useStyles();
+const validate = (values: any) => {
+  const errors: any = {};
+  const requiredFields = ["name", "email", "password"];
+  requiredFields.forEach((field) => {
+    if (!values[field]) {
+      errors[field] = "Pole wymagane";
+    }
+  });
+  if (
+    values.email &&
+    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
+  ) {
+    errors.email = "Nieprawidłowy adres e-mail";
+  }
+  return errors;
+};
 
+const SignUpFirstStep = (props: InjectedFormProps & any) => {
+  const { handleSubmit } = props;
+
+  const onSubmit = (formValues: any) => {
+    console.log(MD5(formValues.password));
+  };
+
+  const classes = useStyles();
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -43,38 +67,20 @@ const SignUpFirstStep = () => {
         <Typography component="h1" variant="h5">
           Zarejestruj się
         </Typography>
-        <form className={classes.form}>
+        <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
             <Grid item sm={12}>
-              <TextField
-                autoComplete="name"
-                name="Name"
-                variant="outlined"
-                fullWidth
-                id="Name"
-                label="Nazwa"
-                autoFocus
-              />
+              <Field name="name" component={RenderTextField} label="Nazwa" />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                fullWidth
-                id="email"
-                label="Adres E-mail"
-                name="email"
-                autoComplete="email"
-              />
+              <Field name="email" label="E-mail" component={RenderTextField} />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                fullWidth
+              <Field
                 name="password"
                 label="Hasło"
                 type="password"
-                id="password"
-                autoComplete="current-password"
+                component={RenderTextField}
               />
             </Grid>
           </Grid>
@@ -100,4 +106,6 @@ const SignUpFirstStep = () => {
   );
 };
 
-export default SignUpFirstStep;
+export default reduxForm({ form: "registerFirstStep", validate })(
+  SignUpFirstStep
+);

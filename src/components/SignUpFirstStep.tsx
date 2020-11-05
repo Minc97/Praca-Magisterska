@@ -1,4 +1,5 @@
 import React from "react";
+import { compose } from "recompose";
 import { Field, reduxForm, InjectedFormProps } from "redux-form";
 import { Link as RouterLink } from "react-router-dom";
 import { Button, Typography } from "@material-ui/core";
@@ -10,7 +11,8 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import RenderTextField from "./utils/RenderTextField";
-import MD5 from "./utils/md5";
+import { connect } from "react-redux";
+import { registerUser } from "../redux/actions";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -50,10 +52,10 @@ const validate = (values: any) => {
 };
 
 const SignUpFirstStep = (props: InjectedFormProps & any) => {
-  const { handleSubmit } = props;
+  const { handleSubmit, registerUser } = props;
 
   const onSubmit = (formValues: any) => {
-    console.log(MD5(formValues.password));
+    registerUser(formValues);
   };
 
   const classes = useStyles();
@@ -106,6 +108,7 @@ const SignUpFirstStep = (props: InjectedFormProps & any) => {
   );
 };
 
-export default reduxForm({ form: "registerFirstStep", validate })(
-  SignUpFirstStep
-);
+export default compose(
+  connect(null, { registerUser }),
+  reduxForm({ form: "registerFirstStep", validate })
+)(SignUpFirstStep);

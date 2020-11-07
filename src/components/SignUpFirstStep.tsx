@@ -1,32 +1,32 @@
-import React from "react";
-import { compose } from "recompose";
-import { Field, reduxForm, InjectedFormProps } from "redux-form";
-import { Link as RouterLink } from "react-router-dom";
-import { Button, Typography } from "@material-ui/core";
-import Avatar from "@material-ui/core/Avatar";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
-import RenderTextField from "./utils/RenderTextField";
-import { connect } from "react-redux";
-import { registerUser } from "../redux/actions";
+import React from 'react';
+import { compose } from 'recompose';
+import { Field, reduxForm, InjectedFormProps } from 'redux-form';
+import { Link as RouterLink } from 'react-router-dom';
+import { Button, Typography } from '@material-ui/core';
+import Avatar from '@material-ui/core/Avatar';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import RenderTextField from './utils/RenderTextField';
+import { connect } from 'react-redux';
+import { registerUser } from '../redux/actions';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(2),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: "100%",
+    width: '100%',
     marginTop: theme.spacing(3),
   },
   submit: {
@@ -36,17 +36,14 @@ const useStyles = makeStyles((theme) => ({
 
 const validate = (values: any) => {
   const errors: any = {};
-  const requiredFields = ["name", "email", "password"];
+  const requiredFields = ['name', 'email', 'password'];
   requiredFields.forEach((field) => {
     if (!values[field]) {
-      errors[field] = "Pole wymagane";
+      errors[field] = 'Pole wymagane';
     }
   });
-  if (
-    values.email &&
-    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-  ) {
-    errors.email = "Nieprawidłowy adres e-mail";
+  if (values.email && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+    errors.email = 'Nieprawidłowy adres e-mail';
   }
   return errors;
 };
@@ -75,24 +72,13 @@ const SignUpFirstStep = (props: InjectedFormProps & any) => {
               <Field name="name" component={RenderTextField} label="Nazwa" />
             </Grid>
             <Grid item xs={12}>
-              <Field name="email" label="E-mail" component={RenderTextField} />
+              <Field name="email" label="E-mail" type="email" component={RenderTextField} />
             </Grid>
             <Grid item xs={12}>
-              <Field
-                name="password"
-                label="Hasło"
-                type="password"
-                component={RenderTextField}
-              />
+              <Field name="password" label="Hasło" type="password" component={RenderTextField} />
             </Grid>
           </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
+          <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
             Zarejestruj
           </Button>
           <Grid container>
@@ -110,5 +96,5 @@ const SignUpFirstStep = (props: InjectedFormProps & any) => {
 
 export default compose(
   connect(null, { registerUser }),
-  reduxForm({ form: "registerFirstStep", validate })
+  reduxForm({ form: 'registerFirstStep', validate })
 )(SignUpFirstStep);

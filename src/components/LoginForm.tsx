@@ -1,16 +1,13 @@
 import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
+import { compose } from 'recompose';
+import { connect } from 'react-redux';
+import { Link as RouterLink } from 'react-router-dom';
+import { Field, reduxForm, InjectedFormProps } from 'redux-form';
+import { Avatar, Button, FormControlLabel, Checkbox, Link, Grid, Typography, Container } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import {Link as RouterLink} from "react-router-dom";
+import RenderTextField from './utils/RenderTextField';
+import { loginAttempt } from '../redux/actions';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -32,8 +29,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const LoginForm = () => {
+//todo zaimplementować fukcję "Zapamiętaj mnie"
+
+const LoginForm = (props: InjectedFormProps & any) => {
   const classes = useStyles();
+
+  const { handleSubmit, loginAttempt } = props;
+
+  const onSubmit = (formValues: any) => {
+    loginAttempt(formValues);
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -44,46 +49,23 @@ export const LoginForm = () => {
         <Typography component="h1" variant="h5">
           Logowanie
         </Typography>
-        <form className={classes.form} noValidate>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Adres E-mail"
-            name="email"
-            autoComplete="email"
-            autoFocus
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Hasło"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Zapamiętaj mnie"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
+        <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
+          <Grid container spacing={2}>
+            <Grid item sm={12}>
+              <Field name="email" type="email" component={RenderTextField} label="Adres E-mail" />
+            </Grid>
+            <Grid item sm={12}>
+              <Field name="password" component={RenderTextField} label="Hasło" type="password" />
+            </Grid>
+          </Grid>
+          <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Zapamiętaj mnie" />
+          <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
             Zaloguj się
           </Button>
           <Grid container>
             <Grid item>
               <Link component={RouterLink} to="/registration" variant="body2">
-                {"Nie masz konta? Zarejestruj się"}
+                {'Nie masz konta? Zarejestruj się'}
               </Link>
             </Grid>
           </Grid>
@@ -91,4 +73,6 @@ export const LoginForm = () => {
       </div>
     </Container>
   );
-}
+};
+
+export default compose(connect(null, { loginAttempt }), reduxForm({ form: 'loginFirstStep' }))(LoginForm);

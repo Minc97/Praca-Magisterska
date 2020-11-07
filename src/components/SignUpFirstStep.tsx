@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { compose } from 'recompose';
 import { Field, reduxForm, InjectedFormProps } from 'redux-form';
 import { Link as RouterLink } from 'react-router-dom';
 import { Button, Typography } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
+import DoneTwoToneIcon from '@material-ui/icons/DoneTwoTone';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -32,6 +32,11 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  done: {
+    height: '50vh',
+    display: 'grid',
+    placeItems: 'center'
+  }
 }));
 
 const validate = (values: any) => {
@@ -49,16 +54,37 @@ const validate = (values: any) => {
 };
 
 const SignUpFirstStep = (props: InjectedFormProps & any) => {
+  const [done, setDone] = useState(false);
+
   const { handleSubmit, registerUser } = props;
 
   const onSubmit = (formValues: any) => {
     registerUser(formValues);
+    setDone(true);
   };
 
   const classes = useStyles();
+  if (done) {
+    return (
+      <Container component="main" maxWidth="xl">
+        <div className={classes.done}>
+          <Grid container spacing={2} alignContent="center" alignItems="center" justify="center">
+            <Grid item>
+              <DoneTwoToneIcon style={{ fontSize: 60 }} />
+            </Grid>
+            <Grid item xs>
+              <Typography component="h1" variant="h4">
+                Twoje konto zostało utworzone. Możesz się teraz zalogować.
+              </Typography>
+            </Grid>
+          </Grid>
+        </div>
+      </Container>
+    );
+  }
+
   return (
     <Container component="main" maxWidth="xs">
-      <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
@@ -68,7 +94,7 @@ const SignUpFirstStep = (props: InjectedFormProps & any) => {
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
-            <Grid item sm={12}>
+            <Grid item xs={12}>
               <Field name="name" component={RenderTextField} label="Nazwa" />
             </Grid>
             <Grid item xs={12}>

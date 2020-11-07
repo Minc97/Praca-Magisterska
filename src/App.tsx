@@ -5,8 +5,9 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { AppHeader } from "./layout/AppHeader";
 import theme from "./layout/theme";
 import { MainPage } from "./components/MainPage";
-import { LoginPage } from "./components/LoginPage";
+import LoginPage from "./components/LoginPage";
 import { RegistrationPage } from "./components/RegistrationPage";
+import SecretPage from "./components/SecretPage";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -29,6 +30,9 @@ function App() {
             </Route>
             <Route path="/registration">
               <RegistrationPage />
+            </Route>
+            <Route exact path="/secret-page">
+              <SecretPage />
             </Route>
             <Route path="/">
               <MainPage />

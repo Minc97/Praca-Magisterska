@@ -3,7 +3,7 @@ import { compose } from 'recompose';
 import { connect } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 import { Field, reduxForm, InjectedFormProps } from 'redux-form';
-import { Avatar, Button, FormControlLabel, Checkbox, Link, Grid, Typography, Container } from '@material-ui/core';
+import { Avatar, Button, Link, Grid, Typography, Container } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import RenderTextField from './utils/RenderTextField';
@@ -27,14 +27,15 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  errText: {
+    color: theme.palette.error.dark,
+  },
 }));
 
-//todo zaimplementować fukcję "Zapamiętaj mnie"
-
-const LoginForm = (props: InjectedFormProps & any) => {
+const LoginForm = (props: InjectedFormProps & { loginError: boolean; loginAttempt: any }) => {
   const classes = useStyles();
 
-  const { handleSubmit, loginAttempt } = props;
+  const { handleSubmit, loginAttempt, loginError } = props;
 
   const onSubmit = (formValues: any) => {
     loginAttempt(formValues);
@@ -57,8 +58,14 @@ const LoginForm = (props: InjectedFormProps & any) => {
             <Grid item sm={12}>
               <Field name="password" component={RenderTextField} label="Hasło" type="password" />
             </Grid>
+            {loginError ? (
+              <Grid item xs={12}>
+                <Typography variant="caption" className={classes.errText}>
+                  Wprowadzono niepoprawne dane, spróbuj ponownie
+                </Typography>
+              </Grid>
+            ) : null}
           </Grid>
-          <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Zapamiętaj mnie" />
           <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
             Zaloguj się
           </Button>
@@ -75,4 +82,13 @@ const LoginForm = (props: InjectedFormProps & any) => {
   );
 };
 
-export default compose(connect(null, { loginAttempt }), reduxForm({ form: 'loginFirstStep' }))(LoginForm);
+const mapStateToProps = (state: any) => {
+  return {
+    loginError: state.user.loginError,
+  };
+};
+
+export default compose(
+  connect(mapStateToProps, { loginAttempt }),
+  reduxForm({ form: 'loginFirstStep' })
+)(LoginForm as any);

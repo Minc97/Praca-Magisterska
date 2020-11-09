@@ -1,4 +1,4 @@
-import { LOGIN_USER_FAILED, LOGIN_USER_SUCCESS } from './types';
+import { LOGIN_USER_FAILED, LOGIN_USER_SUCCESS, LOGOUT_USER } from './types';
 
 const initialState = {
   name: '',
@@ -6,7 +6,7 @@ const initialState = {
   password: '',
   faceModel: '',
   authenticated: false,
-  loginError: false
+  loginError: false,
 };
 
 export const userReducer = (state = initialState, action) => {
@@ -14,6 +14,9 @@ export const userReducer = (state = initialState, action) => {
     return { ...state, ...action.payload };
   }
   if (action.type === LOGIN_USER_FAILED) {
+    return { ...state, ...action.payload };
+  }
+  if (action.type === LOGOUT_USER) {
     return { ...state, ...action.payload };
   }
   return state;

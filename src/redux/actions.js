@@ -1,6 +1,6 @@
 import md5 from 'md5';
 import store from './store';
-import { LOGIN_USER_FAILED, LOGIN_USER_SUCCESS, REGISTER_USER } from './types';
+import { LOGIN_USER_FAILED, LOGIN_USER_SUCCESS, LOGOUT_USER, REGISTER_USER } from './types';
 
 export const registerUser = (formValues) => {
   const protectedFormValues = { ...formValues };
@@ -8,6 +8,13 @@ export const registerUser = (formValues) => {
   return {
     type: REGISTER_USER,
     payload: protectedFormValues,
+  };
+};
+
+export const logoutUser = () => {
+  return {
+    type: LOGOUT_USER,
+    payload: { authenticated: false },
   };
 };
 
@@ -20,7 +27,7 @@ export const loginAttempt = (formValues) => {
   ) {
     protectedFormValues.name = store.getState().userDatabase.name;
     protectedFormValues.authenticated = true;
-    protectedFormValues.loginError = false
+    protectedFormValues.loginError = false;
 
     return {
       type: LOGIN_USER_SUCCESS,

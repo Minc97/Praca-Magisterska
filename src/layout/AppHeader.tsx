@@ -1,10 +1,10 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { AppBar, Link, Toolbar, Typography, Button, IconButton } from '@material-ui/core';
+import { AppBar, Link, Toolbar, Typography, Button } from '@material-ui/core';
 import { logoutUser } from '../redux/actions';
+import UserPopover from '../components/UserPopover';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -17,9 +17,6 @@ const useStyles = makeStyles((theme: Theme) =>
     title: {
       flexGrow: 1,
     },
-    userIcon: {
-      color: '#fff'
-    }
   })
 );
 
@@ -48,9 +45,7 @@ export const AppHeader = () => {
             Zaloguj się
           </Button>
         )}
-        <IconButton aria-label="user">
-          <AccountCircleIcon className={classes.userIcon}/>
-        </IconButton>
+        <UserPopover />
       </Toolbar>
     </AppBar>
   );

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { HashRouter as Router, Switch, Route } from 'react-router-dom';
+import process from 'process';
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { AppHeader } from './layout/AppHeader';
@@ -18,12 +19,17 @@ const useStyles = makeStyles((theme: Theme) =>
 function App() {
   const classes = useStyles();
 
-  //todo wstawić to wersję produkcyjną (zapobiega przypadkowemu odświeżeniu strony)
-  // useEffect(() => {
-  //   window.onbeforeunload = () => {
-  //     return true
-  //   }
-  // }, [])
+  const isDev = () => {
+    return !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
+  };
+
+  useEffect(() => {
+    if (!isDev()) {
+      window.onbeforeunload = () => {
+        return true;
+      };
+    }
+  }, []);
 
   return (
     <>

@@ -1,8 +1,7 @@
 import React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import { Button, CardMedia, CardContent, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
 import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles({
@@ -33,6 +32,9 @@ const UserLogged = () => {
         <Typography gutterBottom variant="subtitle1" component="h2">
           {userEmail}
         </Typography>
+        <Button color="secondary" variant="contained" component={RouterLink} to="/secret-page" size="small">
+          Sekretne zasoby
+        </Button>
       </CardContent>
     </>
   );

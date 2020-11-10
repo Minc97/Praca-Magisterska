@@ -1,6 +1,6 @@
-import { LOGIN_USER_FAILED, LOGIN_USER_SUCCESS, LOGOUT_USER } from './types';
+import { LOGIN_USER_FAILED, LOGIN_USER_SUCCESS, LOGOUT_USER, User } from './types';
 
-const initialState = {
+const initialState: User = {
   name: '',
   email: '',
   password: '',
@@ -9,7 +9,7 @@ const initialState = {
   loginError: false,
 };
 
-export const userReducer = (state = initialState, action) => {
+export const userReducer = (state = initialState, action: { type: string; payload: any; }) => {
   if (action.type === LOGIN_USER_SUCCESS) {
     return { ...state, ...action.payload };
   }

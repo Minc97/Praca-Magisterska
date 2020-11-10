@@ -1,8 +1,16 @@
 import md5 from 'md5';
 import store from './store';
-import { LOGIN_USER_FAILED, LOGIN_USER_SUCCESS, LOGOUT_USER, REGISTER_USER } from './types';
+import {
+  LOGIN_USER_FAILED,
+  LOGIN_USER_SUCCESS,
+  LOGOUT_USER,
+  REGISTER_USER,
+  LoginValues,
+  RegisterValues,
+  User,
+} from './types';
 
-export const registerUser = (formValues) => {
+export const registerUser = (formValues: RegisterValues) => {
   const protectedFormValues = { ...formValues };
   protectedFormValues.password = md5(protectedFormValues.password);
   return {
@@ -18,7 +26,7 @@ export const logoutUser = () => {
   };
 };
 
-export const loginAttempt = (formValues) => {
+export const loginAttempt = (formValues: LoginValues & User) => {
   const protectedFormValues = { ...formValues };
   protectedFormValues.password = md5(protectedFormValues.password);
   if (

@@ -1,17 +1,15 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import Popover from '@material-ui/core/Popover';
+import { Button, Card, Popover } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import { Button } from '@material-ui/core';
+import UserLogged from './UserLogged';
+import UserNotLogged from './UserNotLogged';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      padding: theme.spacing(2),
-    },
-    userIcon: {
-      color: '#fff',
+      maxWidth: 345,
     },
   })
 );
@@ -20,6 +18,9 @@ const UserPopover = () => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const authenticated = useSelector((state: any) => state.user.authenticated);
+  const userName = useSelector((state: any) => state.user.name);
+
+  const user = userName ? userName : 'Użytkownik';
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -35,7 +36,7 @@ const UserPopover = () => {
   return (
     <div>
       <Button startIcon={<AccountCircleIcon />} color="inherit" variant="outlined" onClick={handleClick}>
-        Użytkownik
+        {user}
       </Button>
       <Popover
         id={id}
@@ -51,7 +52,7 @@ const UserPopover = () => {
           horizontal: 'center',
         }}
       >
-        {authenticated ? <div>Zalogowane rzeczy</div> : <div className={classes.root}>Musisz być zalogowany aby zobaczyć zawartość [odstęp enter] zaloguj się </div>}
+        <Card className={classes.root}>{authenticated ? <UserLogged /> : <UserNotLogged />}</Card>
       </Popover>
     </div>
   );

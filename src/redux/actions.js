@@ -14,7 +14,7 @@ export const registerUser = (formValues) => {
 export const logoutUser = () => {
   return {
     type: LOGOUT_USER,
-    payload: { authenticated: false },
+    payload: { authenticated: false, password: '' },
   };
 };
 

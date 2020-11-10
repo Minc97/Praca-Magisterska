@@ -12,7 +12,7 @@ const LoginPage = ({ authenticated }: Props) => {
   return (
     <Container maxWidth="lg">
       <LoginForm />
-      {authenticated ? <Redirect to="/secret-page" /> : null}
+      {authenticated ? <Redirect to="/" /> : null}
     </Container>
   );
 };

@@ -19,12 +19,8 @@ const useStyles = makeStyles((theme: Theme) =>
 function App() {
   const classes = useStyles();
 
-  const isDev = () => {
-    return !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
-  };
-
   useEffect(() => {
-    if (!isDev()) {
+    if (process.env.NODE_ENV === 'development') {
       window.onbeforeunload = () => {
         return true;
       };

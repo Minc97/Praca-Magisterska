@@ -1,9 +1,9 @@
 import React from "react";
 import Particles from "react-particles-js";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { createStyles, makeStyles } from "@material-ui/core/styles";
 import theme from "./theme";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     particles: {
       position: "fixed",
@@ -41,14 +41,6 @@ export const ParticlesBackground = () => {
           },
           links: {
             color: "random",
-          },
-        },
-        interactivity: {
-          events: {
-            onhover: {
-              enable: true,
-              mode: "bounce",
-            },
           },
         },
       }}

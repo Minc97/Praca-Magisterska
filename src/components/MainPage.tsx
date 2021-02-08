@@ -1,18 +1,22 @@
-import React from "react";
-import { ParticlesBackground } from "../layout/ParticlesBackground";
-import { Container, Grid, Paper, Typography } from "@material-ui/core";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import React from 'react';
+import { ParticlesBackground } from '../layout/ParticlesBackground';
+import { Container, Grid, Paper, Typography } from '@material-ui/core';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     image: {
-      height: "100%",
-      width: "100%",
-      filter: "drop-shadow(0 0 2rem)",
-      borderRadius: "10px",
+      maxHeight: '50vh',
+      width: 'auto',
+      filter: 'drop-shadow(0 0 2rem)',
+      borderRadius: '10px',
     },
     grid: {
-      height: `90vh`,
+      height: `85vh`,
+      marginTop: '2rem',
+    },
+    paperBox: {
+      padding: '1rem',
     },
   })
 );
@@ -23,14 +27,7 @@ export const MainPage = () => {
     <>
       <ParticlesBackground />
       <Container component="div" maxWidth="lg">
-        <Grid
-          container
-          direction="row"
-          justify="center"
-          alignItems="center"
-          spacing={6}
-          className={classes.grid}
-        >
+        <Grid container direction="column" justify="center" alignItems="center" spacing={6} className={classes.grid}>
           <Grid item xs>
             <img
               src="https://images.unsplash.com/photo-1485796826113-174aa68fd81b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80"
@@ -40,11 +37,10 @@ export const MainPage = () => {
             />
           </Grid>
           <Grid item xs>
-            <Paper>
+            <Paper className={classes.paperBox}>
               <Typography variant="h5" component="h1" align="center">
-                Dwuczynnikowe: biometryczne i behawioralne, uwierzytelnianie
-                klienta serwisu webowego poprzez weryfikację twarzy i jej mimiki
-                z wykorzystaniem sztucznych sieci neuronowych.
+                Dwuczynnikowe: biometryczne i behawioralne, uwierzytelnianie klienta serwisu webowego poprzez
+                weryfikację twarzy i jej mimiki z wykorzystaniem sztucznych sieci neuronowych.
               </Typography>
             </Paper>
           </Grid>

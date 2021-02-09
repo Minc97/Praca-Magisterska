@@ -1,13 +1,12 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import * as faceapi from 'face-api.js';
 import Webcam from 'react-webcam';
+import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import * as tf from '@tensorflow/tfjs';
 import * as facemesh from '@tensorflow-models/facemesh';
-
-interface Props {
-  setManyFaces: React.Dispatch<React.SetStateAction<boolean>>;
-  setFaceInViewConfidence: React.Dispatch<React.SetStateAction<number>>;
-}
+import { Grid } from '@material-ui/core';
+import { FaceDetectProcess } from './FaceDetectProcess';
 
 const useStyles = makeStyles(() => ({
   webcam: {
@@ -19,7 +18,10 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const FaceDetector: React.FC<Props> = ({ setManyFaces, setFaceInViewConfidence }) => {
+export const FaceDetector: React.FC = () => {
+  const [manyFaces, setManyFaces] = useState<boolean>(false);
+  const [faceInViewConfidence, setFaceInViewConfidence] = useState<number>(0);
+
   const classes = useStyles();
   useEffect(() => {
     tf.getBackend();
@@ -47,16 +49,36 @@ export const FaceDetector: React.FC<Props> = ({ setManyFaces, setFaceInViewConfi
       const net = await facemesh.load({});
       setInterval(() => {
         detect(net);
-      }, 100);
+      }, 300);
     };
     runFacemesh().then();
   }, [setFaceInViewConfidence, setManyFaces]);
 
   const webcamRef = useRef<any>(null);
+  const confidence = useMemo(() => Math.round(faceInViewConfidence * 100), [faceInViewConfidence]);
+
+  const capture = React.useCallback(() => {
+    const imageSrc = webcamRef.current.getScreenshot();
+    console.log(imageSrc);
+  }, [webcamRef]);
 
   return (
     <>
-      <Webcam ref={webcamRef} className={classes.webcam} mirrored />
+      <Grid container direction="column" justify="center" alignItems="center" spacing={3}>
+        <Grid item xs={12}>
+          <Webcam screenshotFormat="image/jpeg" ref={webcamRef} className={classes.webcam} mirrored />
+        </Grid>
+      </Grid>
+      <Grid container direction="column" justify="flex-start" alignItems="stretch" spacing={3}>
+        <Grid item xs={12}>
+          <FaceDetectProcess confidence={confidence} manyFaces={manyFaces} />
+        </Grid>
+        <Grid item xs={12}>
+          <Button disabled={confidence < 100} variant="contained" color="primary" onClick={capture}>
+            Zapisz model
+          </Button>
+        </Grid>
+      </Grid>
     </>
   );
 };

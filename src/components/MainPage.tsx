@@ -1,7 +1,7 @@
 import React from 'react';
 import { ParticlesBackground } from '../layout/ParticlesBackground';
 import { Container, Grid, Paper, Typography } from '@material-ui/core';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(() =>
   createStyles({

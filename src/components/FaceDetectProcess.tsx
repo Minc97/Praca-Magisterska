@@ -4,19 +4,18 @@ import { LinearProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 interface Props {
-  faceInViewConfidence: number;
+  confidence: number;
   manyFaces: boolean;
 }
 
 const useStyles = makeStyles({
   root: {
-    width: 640,
+    width: '100%',
   },
 });
 
-export const FaceDetectProcess: React.FC<Props> = ({ faceInViewConfidence, manyFaces }) => {
+export const FaceDetectProcess: React.FC<Props> = ({ confidence, manyFaces }) => {
   const classes = useStyles();
-  const confidence = useMemo(() => Math.round(faceInViewConfidence * 100), [faceInViewConfidence]);
   if (manyFaces) {
     return <Typography variant="h6">Wykryto wiele twarzy!</Typography>;
   }

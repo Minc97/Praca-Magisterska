@@ -24,6 +24,7 @@
     "@types/react-router-dom": "^5.1.6",
     "@types/recompose": "^0.30.7",
     "@types/redux-form": "^8.3.0",
+    "face-api.js": "^0.22.2",
     "md5": "^2.3.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",

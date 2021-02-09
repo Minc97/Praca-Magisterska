@@ -10,9 +10,11 @@ import { FaceDetectProcess } from './FaceDetectProcess';
 
 const useStyles = makeStyles(() => ({
   webcam: {
-    position: 'relative',
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    width: 640,
+    height: 480,
+  },
+  canvas: {
+    position: 'absolute',
     width: 640,
     height: 480,
   },
@@ -21,64 +23,103 @@ const useStyles = makeStyles(() => ({
 export const FaceDetector: React.FC = () => {
   const [manyFaces, setManyFaces] = useState<boolean>(false);
   const [faceInViewConfidence, setFaceInViewConfidence] = useState<number>(0);
-
   const classes = useStyles();
+
   useEffect(() => {
-    tf.getBackend();
-    const detect = async (net: any) => {
-      if (webcamRef?.current?.video?.readyState === 4) {
-        const video = webcamRef.current.video;
-        const videoWidth = webcamRef.current.video.videoWidth;
-        const videoHeight = webcamRef.current.video.videoHeight;
+    const loadModels = async () => {
+      const MODEL_URL = `${process.env.PUBLIC_URL}/weights`;
 
-        webcamRef.current.video.width = videoWidth;
-        webcamRef.current.video.height = videoHeight;
+      Promise.all([
+        faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+        faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+        faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
+        faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
+      ]).then();
 
-        const face = await net.estimateFaces(video);
+      const detect = async () => {
+        if (webcamRef?.current?.video?.readyState === 4) {
+          const video = webcamRef.current.video;
+          const videoWidth = webcamRef.current.video.videoWidth;
+          const videoHeight = webcamRef.current.video.videoHeight;
 
-        if (face.length === 1) {
-          setManyFaces(false);
-          setFaceInViewConfidence(face[0].faceInViewConfidence);
+          webcamRef.current.video.width = videoWidth;
+          webcamRef.current.video.height = videoHeight;
+
+          faceapi.matchDimensions(canvasRef.current, { width: 640, height: 480 });
+          const detections = await faceapi
+            .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+            .withFaceLandmarks()
+            .withFaceExpressions();
+          canvasRef.current.getContext('2d').clearRect(0, 0, 640, 480);
+          faceapi.draw.drawDetections(canvasRef.current, detections);
+          faceapi.draw.drawFaceLandmarks(canvasRef.current, detections);
+          console.log(detections);
         }
-        if (face.length > 1) {
-          setManyFaces(true);
-        }
-      }
+      };
+      setInterval(() => detect(), 100);
     };
-    const runFacemesh = async () => {
-      const net = await facemesh.load({});
-      setInterval(() => {
-        detect(net);
-      }, 300);
-    };
-    runFacemesh().then();
-  }, [setFaceInViewConfidence, setManyFaces]);
+    loadModels().then();
+  }, []);
+
+  // useEffect(() => {
+  //   tf.getBackend();
+  //   const detect = async (net: any) => {
+  //     if (webcamRef?.current?.video?.readyState === 4) {
+  //       const video = webcamRef.current.video;
+  //       const videoWidth = webcamRef.current.video.videoWidth;
+  //       const videoHeight = webcamRef.current.video.videoHeight;
+  //
+  //       webcamRef.current.video.width = videoWidth;
+  //       webcamRef.current.video.height = videoHeight;
+  //
+  //       const face = await net.estimateFaces(video);
+  //
+  //       if (face.length === 1) {
+  //         setManyFaces(false);
+  //         setFaceInViewConfidence(face[0].faceInViewConfidence);
+  //       }
+  //       if (face.length > 1) {
+  //         setManyFaces(true);
+  //       }
+  //     }
+  //   };
+  //   const runFacemesh = async () => {
+  //     const net = await facemesh.load({});
+  //     setInterval(() => {
+  //       detect(net);
+  //     }, 300);
+  //   };
+  //   runFacemesh().then();
+  // }, [setFaceInViewConfidence, setManyFaces]);
 
   const webcamRef = useRef<any>(null);
-  const confidence = useMemo(() => Math.round(faceInViewConfidence * 100), [faceInViewConfidence]);
+  const canvasRef = useRef<any>(null);
 
-  const capture = React.useCallback(() => {
-    const imageSrc = webcamRef.current.getScreenshot();
-    console.log(imageSrc);
-  }, [webcamRef]);
+  // const capture = React.useCallback(() => {
+  //   const imageSrc = webcamRef.current.getScreenshot();
+  //   console.log(imageSrc);
+  // }, [webcamRef]);
+  //
+  // const confidence = useMemo(() => Math.round(faceInViewConfidence * 100), [faceInViewConfidence]);
 
   return (
     <>
-      <Grid container direction="column" justify="center" alignItems="center" spacing={3}>
+      <Grid container direction="column" justify="center" alignItems="center">
         <Grid item xs={12}>
-          <Webcam screenshotFormat="image/jpeg" ref={webcamRef} className={classes.webcam} mirrored />
+          <Webcam screenshotFormat="image/jpeg" ref={webcamRef} className={classes.webcam} />
         </Grid>
+        <canvas ref={canvasRef} className={classes.canvas} />
       </Grid>
-      <Grid container direction="column" justify="flex-start" alignItems="stretch" spacing={3}>
-        <Grid item xs={12}>
-          <FaceDetectProcess confidence={confidence} manyFaces={manyFaces} />
-        </Grid>
-        <Grid item xs={12}>
-          <Button disabled={confidence < 100} variant="contained" color="primary" onClick={capture}>
-            Zapisz model
-          </Button>
-        </Grid>
-      </Grid>
+      {/*<Grid container direction="column" justify="flex-start" alignItems="stretch" spacing={3}>*/}
+      {/*  <Grid item xs={12}>*/}
+      {/*    <FaceDetectProcess confidence={confidence} manyFaces={manyFaces} />*/}
+      {/*  </Grid>*/}
+      {/*  <Grid item xs={12}>*/}
+      {/*    <Button disabled={confidence < 100} variant="contained" color="primary" onClick={capture}>*/}
+      {/*      Zapisz model*/}
+      {/*    </Button>*/}
+      {/*  </Grid>*/}
+      {/*</Grid>*/}
     </>
   );
 };

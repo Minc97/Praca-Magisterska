@@ -8,15 +8,15 @@ import * as facemesh from '@tensorflow-models/facemesh';
 import { Grid } from '@material-ui/core';
 import { FaceDetectProcess } from './FaceDetectProcess';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   webcam: {
-    width: 640,
-    height: 480,
+    width: 1024,
+    height: 576,
   },
   canvas: {
     position: 'absolute',
-    width: 640,
-    height: 480,
+    width: 1024,
+    height: 576,
   },
 }));
 
@@ -45,15 +45,15 @@ export const FaceDetector: React.FC = () => {
           webcamRef.current.video.width = videoWidth;
           webcamRef.current.video.height = videoHeight;
 
-          faceapi.matchDimensions(canvasRef.current, { width: 640, height: 480 });
+          faceapi.matchDimensions(canvasRef.current, { width: videoWidth, height: videoHeight} );
           const detections = await faceapi
             .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
             .withFaceLandmarks()
             .withFaceExpressions();
-          canvasRef.current.getContext('2d').clearRect(0, 0, 640, 480);
+          canvasRef.current.getContext('2d').clearRect(0, 0, 1024, 576);
           faceapi.draw.drawDetections(canvasRef.current, detections);
           faceapi.draw.drawFaceLandmarks(canvasRef.current, detections);
-          console.log(detections);
+          faceapi.draw.drawFaceExpressions(canvasRef.current, detections);
         }
       };
       setInterval(() => detect(), 100);

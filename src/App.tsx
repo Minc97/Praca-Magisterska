@@ -9,6 +9,7 @@ import { MainPage } from './components/MainPage';
 import LoginPage from './components/LoginPage';
 import { RegistrationPage } from './components/RegistrationPage';
 import SecretPage from './components/SecretPage';
+import { api } from './apis/api';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -25,6 +26,11 @@ function App() {
         return true;
       };
     }
+    const fetchData = async () => {
+      const response = await api.get('/')
+      console.log(response);
+    }
+    fetchData().then();
   }, []);
 
   return (

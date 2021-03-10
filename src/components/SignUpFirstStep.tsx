@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { compose } from 'recompose';
 import { Field, reduxForm, InjectedFormProps } from 'redux-form';
 import { Link as RouterLink } from 'react-router-dom';
@@ -12,11 +12,14 @@ import Container from '@material-ui/core/Container';
 import RenderTextField from './utils/RenderTextField';
 import { connect } from 'react-redux';
 import { registerUser } from '../redux/actions';
-import RegisterDone from './RegisterDone';
+
+type Props = {
+  nextStep: () => void;
+  registerUser?: any;
+};
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -36,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
 const validate = (values: any) => {
   const errors: any = {};
-  const requiredFields = ['name', 'email', 'password'];
+  const requiredFields = ['name', 'email', 'password', 'passwordConfirmation'];
   requiredFields.forEach((field) => {
     if (!values[field]) {
       errors[field] = 'Pole wymagane';
@@ -45,22 +48,20 @@ const validate = (values: any) => {
   if (values.email && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
     errors.email = 'Nieprawidłowy adres e-mail';
   }
+  if (values.passwordConfirmation !== values.password) {
+    errors.passwordConfirmation = 'Wprowadzone hasła się różnią'
+  }
   return errors;
 };
 
-const SignUpFirstStep = (props: InjectedFormProps & any) => {
-  const [done, setDone] = useState(false);
+const SignUpFirstStep: React.FC<InjectedFormProps & Props> = (props) => {
   const classes = useStyles();
-  const { handleSubmit, registerUser } = props;
+  const { handleSubmit, registerUser, nextStep, submitting } = props;
 
   const onSubmit = (formValues: any) => {
     registerUser(formValues);
-    setDone(true);
+    nextStep();
   };
-
-  if (done) {
-    return <RegisterDone />;
-  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -82,9 +83,17 @@ const SignUpFirstStep = (props: InjectedFormProps & any) => {
             <Grid item xs={12}>
               <Field name="password" label="Hasło" type="password" component={RenderTextField} />
             </Grid>
+            <Grid item xs={12}>
+              <Field
+                name="passwordConfirmation"
+                label="Potwierdzenie hasła"
+                type="password"
+                component={RenderTextField}
+              />
+            </Grid>
           </Grid>
-          <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
-            Zarejestruj
+          <Button disabled={submitting} type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+            Dalej
           </Button>
           <Grid container>
             <Grid item>
@@ -99,7 +108,7 @@ const SignUpFirstStep = (props: InjectedFormProps & any) => {
   );
 };
 
-export default compose(
+export default compose<InjectedFormProps & Props, Props>(
   connect(null, { registerUser }),
   reduxForm({ form: 'registerFirstStep', validate })
 )(SignUpFirstStep);

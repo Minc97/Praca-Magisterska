@@ -1,14 +1,25 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import * as faceapi from 'face-api.js';
+import { WithFaceDetection, WithFaceLandmarks } from 'face-api.js';
 import Webcam from 'react-webcam';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import * as tf from '@tensorflow/tfjs';
-import * as facemesh from '@tensorflow-models/facemesh';
 import { Grid } from '@material-ui/core';
 import { FaceDetectProcess } from './FaceDetectProcess';
+import { compose } from 'recompose';
+import { connect } from 'react-redux';
+import { registerUserModel } from '../redux/actions';
+import { InjectedFormProps, reduxForm } from 'redux-form';
 
-const useStyles = makeStyles((theme) => ({
+type Props = {
+  nextStep: () => void;
+};
+
+type ReduxProps = {
+  registerUserModel: any
+}
+
+const useStyles = makeStyles(() => ({
   webcam: {
     width: 1024,
     height: 576,
@@ -20,106 +31,88 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const FaceDetector: React.FC = () => {
+const FaceDetector: React.FC<InjectedFormProps & Props & ReduxProps> = ({ handleSubmit, nextStep, registerUserModel, submitting }) => {
   const [manyFaces, setManyFaces] = useState<boolean>(false);
-  const [faceInViewConfidence, setFaceInViewConfidence] = useState<number>(0);
   const classes = useStyles();
+
+  const detectMemo = useCallback(() => {
+    const detect = async () => {
+      if (webcamRef?.current?.video?.readyState === 4) {
+        const video = webcamRef.current.video;
+        const videoWidth = webcamRef.current.video.videoWidth;
+        const videoHeight = webcamRef.current.video.videoHeight;
+
+        webcamRef.current.video.width = videoWidth;
+        webcamRef.current.video.height = videoHeight;
+
+        faceapi.matchDimensions(canvasRef.current, { width: videoWidth, height: videoHeight });
+        const detections: Array<WithFaceLandmarks<WithFaceDetection<{}>>> = await faceapi
+          .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+          .withFaceLandmarks();
+
+        if (detections.length !== 1) {
+          setManyFaces(true);
+        }
+
+        if (detections.length === 1) {
+          setManyFaces(false);
+        }
+
+        if (canvasRef.current) {
+          canvasRef.current.getContext('2d').clearRect(0, 0, 1024, 576);
+          faceapi.draw.drawFaceLandmarks(canvasRef.current, detections);
+        }
+      }
+    };
+    detect().then();
+  }, []);
 
   useEffect(() => {
     const loadModels = async () => {
       const MODEL_URL = `${process.env.PUBLIC_URL}/weights`;
-
       Promise.all([
         faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
         faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
-        faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
-        faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
       ]).then();
-
-      const detect = async () => {
-        if (webcamRef?.current?.video?.readyState === 4) {
-          const video = webcamRef.current.video;
-          const videoWidth = webcamRef.current.video.videoWidth;
-          const videoHeight = webcamRef.current.video.videoHeight;
-
-          webcamRef.current.video.width = videoWidth;
-          webcamRef.current.video.height = videoHeight;
-
-          faceapi.matchDimensions(canvasRef.current, { width: videoWidth, height: videoHeight} );
-          const detections = await faceapi
-            .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
-            .withFaceLandmarks()
-            .withFaceExpressions();
-          canvasRef.current.getContext('2d').clearRect(0, 0, 1024, 576);
-          faceapi.draw.drawDetections(canvasRef.current, detections);
-          faceapi.draw.drawFaceLandmarks(canvasRef.current, detections);
-          faceapi.draw.drawFaceExpressions(canvasRef.current, detections);
-        }
-      };
-      setInterval(() => detect(), 100);
     };
-    loadModels().then();
-  }, []);
 
-  // useEffect(() => {
-  //   tf.getBackend();
-  //   const detect = async (net: any) => {
-  //     if (webcamRef?.current?.video?.readyState === 4) {
-  //       const video = webcamRef.current.video;
-  //       const videoWidth = webcamRef.current.video.videoWidth;
-  //       const videoHeight = webcamRef.current.video.videoHeight;
-  //
-  //       webcamRef.current.video.width = videoWidth;
-  //       webcamRef.current.video.height = videoHeight;
-  //
-  //       const face = await net.estimateFaces(video);
-  //
-  //       if (face.length === 1) {
-  //         setManyFaces(false);
-  //         setFaceInViewConfidence(face[0].faceInViewConfidence);
-  //       }
-  //       if (face.length > 1) {
-  //         setManyFaces(true);
-  //       }
-  //     }
-  //   };
-  //   const runFacemesh = async () => {
-  //     const net = await facemesh.load({});
-  //     setInterval(() => {
-  //       detect(net);
-  //     }, 300);
-  //   };
-  //   runFacemesh().then();
-  // }, [setFaceInViewConfidence, setManyFaces]);
+    detectMemo();
+    setInterval(() => detectMemo(), 100);
+    loadModels().then();
+  }, [detectMemo]);
 
   const webcamRef = useRef<any>(null);
   const canvasRef = useRef<any>(null);
 
-  // const capture = React.useCallback(() => {
-  //   const imageSrc = webcamRef.current.getScreenshot();
-  //   console.log(imageSrc);
-  // }, [webcamRef]);
-  //
-  // const confidence = useMemo(() => Math.round(faceInViewConfidence * 100), [faceInViewConfidence]);
+  const onSubmit = () => {
+    const capture: string = webcamRef.current.getScreenshot();
+    registerUserModel(capture);
+    nextStep();
+  };
 
   return (
-    <>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Grid container direction="column" justify="center" alignItems="center">
         <Grid item xs={12}>
           <Webcam screenshotFormat="image/jpeg" ref={webcamRef} className={classes.webcam} />
         </Grid>
         <canvas ref={canvasRef} className={classes.canvas} />
       </Grid>
-      {/*<Grid container direction="column" justify="flex-start" alignItems="stretch" spacing={3}>*/}
-      {/*  <Grid item xs={12}>*/}
-      {/*    <FaceDetectProcess confidence={confidence} manyFaces={manyFaces} />*/}
-      {/*  </Grid>*/}
-      {/*  <Grid item xs={12}>*/}
-      {/*    <Button disabled={confidence < 100} variant="contained" color="primary" onClick={capture}>*/}
-      {/*      Zapisz model*/}
-      {/*    </Button>*/}
-      {/*  </Grid>*/}
-      {/*</Grid>*/}
-    </>
+      <Grid container direction="column" justify="flex-start" alignItems="center" spacing={3}>
+        <Grid item xs={12}>
+          <FaceDetectProcess manyFaces={manyFaces} />
+        </Grid>
+        <Grid item xs={12}>
+          <Button type="submit" disabled={manyFaces && submitting} variant="contained" color="primary">
+            Zapisz model
+          </Button>
+        </Grid>
+      </Grid>
+    </form>
   );
 };
+
+export default compose<InjectedFormProps & Props & ReduxProps, Props>(
+  connect(null, { registerUserModel }),
+  reduxForm({ form: 'registerSecondStep' })
+)(FaceDetector);

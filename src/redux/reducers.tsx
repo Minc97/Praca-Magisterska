@@ -1,10 +1,10 @@
 import { combineReducers } from "redux";
 import { reducer as formReducer } from 'redux-form'
 import { userReducer } from "./userReducer";
-import { userDatabaseReducer } from "./userDatabaseReducer";
+import { userRegister } from "./userRegister";
 
 const rootReducer = combineReducers({
-  userDatabase: userDatabaseReducer,
+  userRegister: userRegister,
   user: userReducer,
   form: formReducer
 });

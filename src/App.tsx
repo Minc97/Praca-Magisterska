@@ -27,8 +27,12 @@ function App() {
       };
     }
     const fetchData = async () => {
-      const response = await api.get('/')
-      console.log(response);
+      try {
+        const response = await api.get('/')
+        console.log(response);
+      } catch (e) {
+        console.error(e)
+      }
     }
     fetchData().then();
   }, []);

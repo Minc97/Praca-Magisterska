@@ -1,39 +1,44 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import DoneTwoToneIcon from '@material-ui/icons/DoneTwoTone';
-import { Typography } from '@material-ui/core';
-import Container from '@material-ui/core/Container';
+import { useSelector } from 'react-redux'
+import { Typography, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import DoneTwoToneIcon from '@material-ui/icons/DoneTwoTone';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   done: {
-    height: '50vh',
     display: 'grid',
     placeItems: 'center',
   },
   icon: {
-    fontSize: 60,
+    paddingTop: '5px',
+    fontSize: 40,
   },
+  modelText: {
+    textAlign: 'left'
+  }
 }));
 
 const RegisterDone = () => {
   const classes = useStyles();
+  const picture = useSelector((state: any) => state.userRegister.faceModel);
 
   return (
-    <Container component="main" maxWidth="xl">
-      <div className={classes.done}>
-        <Grid container spacing={2} alignContent="center" alignItems="center" justify="center">
-          <Grid item>
-            <DoneTwoToneIcon className={classes.icon} />
-          </Grid>
-          <Grid item xs>
-            <Typography component="h1" variant="h4">
-              Twoje konto zostało utworzone. Możesz się teraz zalogować.
-            </Typography>
-          </Grid>
+    <div className={classes.done}>
+      <Typography component="h1" variant="h6">
+        Zarejestrowany model:
+      </Typography>
+      <img alt="Utworzone zdjęcie do modelu" src={picture} />
+      <Grid container spacing={2} direction="row" alignItems="center" justify="center">
+        <Grid item>
+          <DoneTwoToneIcon className={classes.icon} />
         </Grid>
-      </div>
-    </Container>
+        <Grid item>
+          <Typography component="h1" variant="h5">
+            Twoje konto zostało utworzone. Możesz się teraz zalogować.
+          </Typography>
+        </Grid>
+      </Grid>
+    </div>
   );
 };
 

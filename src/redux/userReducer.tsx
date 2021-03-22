@@ -3,7 +3,6 @@ import { LOGIN_USER_FAILED, LOGIN_USER_SUCCESS, LOGOUT_USER, User } from './type
 const initialState: User = {
   name: '',
   email: '',
-  password: '',
   faceModel: '',
   authenticated: false,
   loginError: false,

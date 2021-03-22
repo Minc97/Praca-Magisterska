@@ -22,7 +22,6 @@ export interface LoginValues {
 export interface User {
   name?: string
   email?: string,
-  password?: string,
   faceModel?: any,
   authenticated: boolean,
   loginError: boolean,
@@ -34,4 +33,5 @@ export interface UserDatabase {
   password?: string,
   selectedMethod?: any,
   faceModel?: any,
+  error: any
 }

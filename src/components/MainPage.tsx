@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ParticlesBackground } from '../layout/ParticlesBackground';
-import { Container, Grid, Paper, Typography } from '@material-ui/core';
+import { Container, Grid, Paper, Typography, Button, ButtonGroup } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
+import { api } from '../apis/api';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link as RouterLink } from 'react-router-dom';
+import { logoutUser } from '../redux/actions';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -23,6 +27,21 @@ const useStyles = makeStyles(() =>
 
 export const MainPage = () => {
   const classes = useStyles();
+  const authenticated = useSelector((state: any) => state.user.authenticated);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await api.get('/');
+        console.log(response);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchData().then();
+  }, []);
+
   return (
     <>
       <ParticlesBackground />
@@ -43,6 +62,20 @@ export const MainPage = () => {
                 weryfikację twarzy i jej mimiki z wykorzystaniem sztucznych sieci neuronowych.
               </Typography>
             </Paper>
+          </Grid>
+          <Grid item xs>
+            <ButtonGroup size="large" variant="contained" color="primary">
+              <Button color="secondary" component={RouterLink} to="/registration">Rejestracja</Button>
+              {authenticated ? (
+                <Button component={RouterLink} to="/" onClick={() => dispatch(logoutUser())}>
+                  Wyloguj
+                </Button>
+              ) : (
+                <Button component={RouterLink} to="/login">
+                  Logowanie
+                </Button>
+              )}
+            </ButtonGroup>
           </Grid>
         </Grid>
       </Container>

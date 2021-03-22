@@ -6,6 +6,7 @@ const initialState: UserDatabase = {
   password: '',
   selectedMethod: '',
   faceModel: '',
+  error: null,
 };
 
 export const userRegister = (state = initialState, action: { type: string; payload: any; }) => {

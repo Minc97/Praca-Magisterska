@@ -8,8 +8,7 @@ import theme from './layout/theme';
 import { MainPage } from './components/MainPage';
 import LoginPage from './components/LoginPage';
 import { RegistrationPage } from './components/RegistrationPage';
-import SecretPage from './components/SecretPage';
-import { api } from './apis/api';
+import UserPage from './components/UserPage';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,15 +25,6 @@ function App() {
         return true;
       };
     }
-    const fetchData = async () => {
-      try {
-        const response = await api.get('/')
-        console.log(response);
-      } catch (e) {
-        console.error(e)
-      }
-    }
-    fetchData().then();
   }, []);
 
   return (
@@ -51,8 +41,8 @@ function App() {
             <Route path="/registration">
               <RegistrationPage />
             </Route>
-            <Route exact path="/secret-page">
-              <SecretPage />
+            <Route exact path="/profile">
+              <UserPage />
             </Route>
             <Route path="/">
               <MainPage />

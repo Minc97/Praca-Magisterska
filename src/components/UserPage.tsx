@@ -1,15 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import UserLogged from './UserLogged';
+import { Redirect } from 'react-router-dom';
 
 interface Props {
   authenticated: boolean;
 }
 
-const SecretPage = ({ authenticated }: Props) => {
+const UserPage = ({ authenticated }: Props) => {
   if (!authenticated) {
-    return <div>Musisz być zalogowany aby zobaczyć tę stronę</div>;
+    return <Redirect to="/login" />;
   }
-  return <div>Sekretna strona przy zalogowanym użytkowniku</div>;
+  return <UserLogged />;
 };
 
 const mapStateToProps = (state: any) => {
@@ -18,4 +20,4 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export default connect(mapStateToProps)(SecretPage);
+export default connect(mapStateToProps)(UserPage);

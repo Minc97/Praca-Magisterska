@@ -1,6 +1,7 @@
 import React from 'react';
-import { useSelector } from 'react-redux'
+import { useSelector } from 'react-redux';
 import { Typography, Grid } from '@material-ui/core';
+import { Alert, AlertTitle } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
 import DoneTwoToneIcon from '@material-ui/icons/DoneTwoTone';
 
@@ -14,13 +15,23 @@ const useStyles = makeStyles(() => ({
     fontSize: 40,
   },
   modelText: {
-    textAlign: 'left'
-  }
+    textAlign: 'left',
+  },
 }));
 
 const RegisterDone = () => {
   const classes = useStyles();
   const picture = useSelector((state: any) => state.userRegister.faceModel);
+  const error = useSelector((state: any) => state.userRegister.error);
+
+  if (error) {
+    return (
+      <Alert severity="error">
+        <AlertTitle>Wystąpił błąd</AlertTitle>
+        Szczegóły: {error?.message}
+      </Alert>
+    );
+  }
 
   return (
     <div className={classes.done}>

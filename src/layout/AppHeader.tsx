@@ -1,9 +1,7 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { AppBar, Link, Toolbar, Typography, Button } from '@material-ui/core';
-import { logoutUser } from '../redux/actions';
+import { AppBar, Link, Toolbar, Typography } from '@material-ui/core';
 import UserPopover from '../components/UserPopover';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -22,8 +20,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const AppHeader = () => {
   const classes = useStyles();
-  const authenticated = useSelector((state: any) => state.user.authenticated);
-  const dispatch = useDispatch();
 
   return (
     <AppBar position="fixed">
@@ -33,18 +29,6 @@ export const AppHeader = () => {
             Praca Magisterska
           </Link>
         </Typography>
-        <Button color="secondary" variant="contained" component={RouterLink} to="/registration">
-          Rejestracja
-        </Button>
-        {authenticated ? (
-          <Button color="inherit" component={RouterLink} to="/" onClick={() => dispatch(logoutUser())}>
-            Wyloguj się
-          </Button>
-        ) : (
-          <Button color="inherit" component={RouterLink} to="/login">
-            Zaloguj się
-          </Button>
-        )}
         <UserPopover />
       </Toolbar>
     </AppBar>

@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { ParticlesBackground } from '../layout/ParticlesBackground';
 import { Container, Grid, Paper, Typography, Button, ButtonGroup } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
-import { api } from '../apis/api';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 import { logoutUser } from '../redux/actions';
@@ -29,18 +28,6 @@ export const MainPage = () => {
   const classes = useStyles();
   const authenticated = useSelector((state: any) => state.user.authenticated);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await api.get('/');
-        console.log(response);
-      } catch (e) {
-        console.error(e);
-      }
-    };
-    fetchData().then();
-  }, []);
 
   return (
     <>

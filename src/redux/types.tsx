@@ -1,8 +1,10 @@
 export const REGISTER_USER_PERSONAL_DATA = '@@registration/REGISTER_USER_PERSONAL_DATA';
 export const REGISTER_USER_MODEL = '@@registration/REGISTER_USER_MODEL'
 export const LOGOUT_USER = '@@auth/LOGOUT_USER';
+export const LOGIN_USER_ATTEMPT = '@@auth/LOGIN_USER_ATTEMPT';
 export const LOGIN_USER_SUCCESS = '@@auth/LOGIN_USER_SUCCESS';
 export const LOGIN_USER_FAILED = '@@auth/LOGIN_USER_FAILED';
+export const CHANGE_AUTH_STATE = '@@auth/CHANGE_AUTH_STATE';
 
 export interface RegisterValues {
   name: string,
@@ -25,6 +27,7 @@ export interface User {
   faceModel?: any,
   authenticated: boolean,
   loginError: boolean,
+  loadingForm: boolean,
 }
 
 export interface UserDatabase {
@@ -34,4 +37,8 @@ export interface UserDatabase {
   selectedMethod?: any,
   faceModel?: any,
   error: any
+}
+
+export type Auth = {
+  auth: boolean
 }

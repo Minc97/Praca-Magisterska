@@ -1,4 +1,4 @@
-import { LOGIN_USER_FAILED, LOGIN_USER_SUCCESS, LOGOUT_USER, User } from './types';
+import { LOGIN_USER_ATTEMPT, LOGIN_USER_FAILED, LOGIN_USER_SUCCESS, LOGOUT_USER, User } from './types';
 
 const initialState: User = {
   name: '',
@@ -6,9 +6,13 @@ const initialState: User = {
   faceModel: '',
   authenticated: false,
   loginError: false,
+  loadingForm: false,
 };
 
 export const userReducer = (state = initialState, action: { type: string; payload: any; }) => {
+  if (action.type === LOGIN_USER_ATTEMPT) {
+    return { ...state, ...action.payload };
+  }
   if (action.type === LOGIN_USER_SUCCESS) {
     return { ...state, ...action.payload };
   }

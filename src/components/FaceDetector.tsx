@@ -21,13 +21,13 @@ type ReduxProps = {
 
 const useStyles = makeStyles(() => ({
   webcam: {
-    width: 1024,
-    height: 576,
+    width: 640,
+    height: 360,
   },
   canvas: {
     position: 'absolute',
-    width: 1024,
-    height: 576,
+    width: 640,
+    height: 360,
   },
 }));
 
@@ -59,7 +59,7 @@ const FaceDetector: React.FC<InjectedFormProps & Props & ReduxProps> = ({ handle
         }
 
         if (canvasRef.current) {
-          canvasRef.current.getContext('2d').clearRect(0, 0, 1024, 576);
+          canvasRef.current.getContext('2d').clearRect(0, 0, 640, 360);
           faceapi.draw.drawFaceLandmarks(canvasRef.current, detections);
         }
       }

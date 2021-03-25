@@ -9,7 +9,7 @@ const createAppStore = () => {
   const persistConfig = {
     key: 'root',
     storage,
-    whitelist: ['user']
+    whitelist: ['user.authenticated']
   }
 
   const persistedReducer = persistReducer(persistConfig, rootReducer)

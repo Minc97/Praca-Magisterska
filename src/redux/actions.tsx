@@ -8,7 +8,7 @@ import {
   LoginValues,
   RegisterValues,
   RegisterModel,
-  User,
+  User, LOGIN_USER_ATTEMPT
 } from './types';
 import { ThunkDispatch } from 'redux-thunk';
 import { api } from '../apis/api';
@@ -51,13 +51,14 @@ export const logoutUser = () => {
   };
 };
 
-export const loginAttempt = (formValues: LoginValues & User) => async (dispatch: ThunkDispatch<any, any, any>) => {
+export const loginAttempt = (formValues: LoginValues & User, capturedFace: string) => async (dispatch: ThunkDispatch<any, any, any>) => {
   const password = md5(formValues.password);
   const email = formValues.email;
+  dispatch({type: LOGIN_USER_ATTEMPT, payload: {loginError: false, e: null, loadingForm: true}})
   try {
-    const response = await api.post('/login', { email, password });
-    dispatch({ type: LOGIN_USER_SUCCESS, payload: response.data, loginError: false });
+    const response = await api.post('/login', { email, password, capturedFace });
+    dispatch({ type: LOGIN_USER_SUCCESS, payload: { ...response.data, loginError: false, loadingForm: false } });
   } catch (e) {
-    dispatch({ type: LOGIN_USER_FAILED, payload: { loginError: true, e } });
+    dispatch({ type: LOGIN_USER_FAILED, payload: { loginError: true, e, loadingForm: false } });
   }
 };

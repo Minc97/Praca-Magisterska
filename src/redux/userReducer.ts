@@ -3,10 +3,9 @@ import { LOGIN_USER_ATTEMPT, LOGIN_USER_FAILED, LOGIN_USER_SUCCESS, LOGOUT_USER,
 const initialState: User = {
   name: '',
   email: '',
-  faceModel: '',
-  authenticated: false,
   loginError: false,
   loadingForm: false,
+  id: null
 };
 
 export const userReducer = (state = initialState, action: { type: string; payload: any; }) => {

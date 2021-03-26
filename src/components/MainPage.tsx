@@ -5,6 +5,7 @@ import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 import { logoutUser } from '../redux/actions';
+import { RootState } from '../redux/reducers';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -26,7 +27,7 @@ const useStyles = makeStyles(() =>
 
 export const MainPage = () => {
   const classes = useStyles();
-  const authenticated = useSelector((state: any) => state.user.authenticated);
+  const authenticated = useSelector((state: RootState) => state.auth.auth);
   const dispatch = useDispatch();
 
   return (

@@ -1,4 +1,5 @@
 import React from 'react';
+import { ImageHistoryCard } from './ImageHistoryCard';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Collapse from '@material-ui/core/Collapse';
@@ -21,35 +22,23 @@ const useRowStyles = makeStyles({
       borderBottom: 'unset',
     },
   },
+  long: {
+    maxWidth: '20vw',
+    wordWrap: 'break-word',
+  },
+  imageFlex: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    margin: '1rem 0'
+  },
 });
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-  price: number,
-) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-    price,
-    history: [
-      { date: '2020-01-05', customerId: '11091700', amount: 3 },
-      { date: '2020-01-02', customerId: 'Anonymous', amount: 1 },
-    ],
-  };
-}
 type Props = {
-  row?: HistoryDTO,
-  registerModel?: string
-}
+  row?: HistoryDTO;
+  registerModel?: string;
+};
 
-function Row({row, registerModel}: Props) {
+function Row({ row, registerModel }: Props) {
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
 
@@ -66,37 +55,31 @@ function Row({row, registerModel}: Props) {
         </TableCell>
         <TableCell align="right">{row?.timestamp}</TableCell>
         <TableCell align="right">{row?.score}</TableCell>
-        <TableCell align="right">{row?.verified ? `Tak`: `Nie`} </TableCell>
+        <TableCell align="right">{row?.verified ? `Tak` : `Nie`} </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box margin={2}>
+            <Box margin={1}>
+              <div className={classes.imageFlex}>
+                <ImageHistoryCard image={row?.login_picture} alt="Model logowania" />
+                <ImageHistoryCard image={registerModel} alt="Model odniesienia" />
+              </div>
               <Typography variant="body1" gutterBottom component="div">
                 Szczegóły
               </Typography>
-              <Table size="small" aria-label="purchases">
+              <Table size="small">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Customer</TableCell>
-                    <TableCell align="right">Amount</TableCell>
-                    <TableCell align="right">Total price ($)</TableCell>
+                    <TableCell>Odległość wektorów</TableCell>
+                    <TableCell>Metryki podobieństwa</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {/*{row.history.map((historyRow: any) => (*/}
-                  {/*  <TableRow key={historyRow.date}>*/}
-                  {/*    <TableCell component="th" scope="row">*/}
-                  {/*      {historyRow.date}*/}
-                  {/*    </TableCell>*/}
-                  {/*    <TableCell>{historyRow.customerId}</TableCell>*/}
-                  {/*    <TableCell align="right">{historyRow.amount}</TableCell>*/}
-                  {/*    <TableCell align="right">*/}
-                  {/*      {Math.round(historyRow.amount * row.price * 100) / 100}*/}
-                  {/*    </TableCell>*/}
-                  {/*  </TableRow>*/}
-                  {/*))}*/}
+                  <TableRow>
+                    <TableCell className={classes.long}>{row?.distance?.replaceAll(';', '; ')}</TableCell>
+                    <TableCell className={classes.long}>{row?.similarity_metric?.replaceAll(';', '; ')}</TableCell>
+                  </TableRow>
                 </TableBody>
               </Table>
             </Box>
@@ -107,7 +90,7 @@ function Row({row, registerModel}: Props) {
   );
 }
 
-export const HistoryTable: React.FC<HistoryType> = ({history, register_model}) => {
+export const HistoryTable: React.FC<HistoryType> = ({ history, register_model }) => {
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table" size="small">
@@ -128,4 +111,4 @@ export const HistoryTable: React.FC<HistoryType> = ({history, register_model}) =
       </Table>
     </TableContainer>
   );
-}
+};

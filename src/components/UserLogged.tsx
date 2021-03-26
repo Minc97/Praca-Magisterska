@@ -6,7 +6,7 @@ import { RootState } from '../redux/reducers';
 import { HistoryTable } from './HistoryTable';
 
 export type HistoryDTO = {
-  distance?: number;
+  distance?: string;
   id?: number;
   login_picture?: string;
   score?: number;

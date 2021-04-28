@@ -14,6 +14,7 @@ export interface RegisterValues {
 
 export type RegisterModel = {
   faceModel: string;
+  emotionMethod: string;
 };
 
 export interface LoginValues {

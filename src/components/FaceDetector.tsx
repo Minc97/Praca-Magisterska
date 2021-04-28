@@ -2,9 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import * as faceapi from 'face-api.js';
 import { WithFaceDetection, WithFaceLandmarks } from 'face-api.js';
 import Webcam from 'react-webcam';
-import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid } from '@material-ui/core';
+import { Grid, Select, MenuItem, InputLabel, Button } from '@material-ui/core';
 import { FaceDetectProcess } from './FaceDetectProcess';
 import { compose } from 'recompose';
 import { connect } from 'react-redux';
@@ -19,7 +18,7 @@ type ReduxProps = {
   registerUserModel: any
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   webcam: {
     width: 640,
     height: 360,
@@ -29,10 +28,19 @@ const useStyles = makeStyles(() => ({
     width: 640,
     height: 360,
   },
+  formControl: {
+    minWidth: 300,
+  },
 }));
 
 const FaceDetector: React.FC<InjectedFormProps & Props & ReduxProps> = ({ handleSubmit, nextStep, registerUserModel, submitting }) => {
   const [manyFaces, setManyFaces] = useState<boolean>(false);
+  const [method, setMethod] = React.useState('DeepFace');
+
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setMethod(event.target.value as string);
+  };
+
   const classes = useStyles();
 
   const detectMemo = useCallback(() => {
@@ -86,7 +94,7 @@ const FaceDetector: React.FC<InjectedFormProps & Props & ReduxProps> = ({ handle
 
   const onSubmit = () => {
     const capture: string = webcamRef.current.getScreenshot();
-    registerUserModel(capture);
+    registerUserModel({faceModel: capture, emotionMethod: method});
     nextStep();
   };
 
@@ -103,7 +111,20 @@ const FaceDetector: React.FC<InjectedFormProps & Props & ReduxProps> = ({ handle
           <FaceDetectProcess manyFaces={manyFaces} />
         </Grid>
         <Grid item xs={12}>
-          <Button type="submit" disabled={manyFaces && submitting} variant="contained" color="primary">
+          <InputLabel id="demo-simple-select-label">Model rozpoznawania emocji</InputLabel>
+          <Select
+            id="simple-select"
+            className={classes.formControl}
+            value={method}
+            onChange={handleChange}
+            variant={'outlined'}
+          >
+            <MenuItem value={'DeepFace'}>DeepFace</MenuItem>
+            <MenuItem value={'FairEmotion'}>FairEmotion</MenuItem>
+          </Select>
+        </Grid>
+        <Grid item xs={12}>
+          <Button type="submit" className={classes.formControl} disabled={manyFaces && submitting} variant="contained" color="primary">
             Zapisz model
           </Button>
         </Grid>

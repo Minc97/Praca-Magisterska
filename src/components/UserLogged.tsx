@@ -13,12 +13,16 @@ export type HistoryDTO = {
   similarity_metric?: string;
   timestamp?: Date;
   user_id?: number;
-  verified?: boolean;
+  verified_face?: string;
+  verified_emotion?: string;
+  authorized?: string;
+  login_emotion: string;
 }
 
 export type HistoryType = {
   history: Array<HistoryDTO>;
   register_model?: string;
+  register_emotion?: string
 };
 
 const UserLogged = () => {

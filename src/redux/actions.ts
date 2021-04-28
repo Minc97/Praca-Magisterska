@@ -36,7 +36,7 @@ export const registerUserModel = (formValues: RegisterModel) => async (
   const password = getState().userRegister.password;
 
   try {
-    const response = await api.post('/signup', { name, email, password, faceModel: formValues });
+    const response = await api.post('/signup', { name, email, password, faceModel: formValues.faceModel, emotionMethod: formValues.emotionMethod });
     if (response.status === 409) {
       dispatch({ type: REGISTER_USER_MODEL, payload: { error: response.data } });
     }
